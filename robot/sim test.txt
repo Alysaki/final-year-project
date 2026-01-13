@@ -1,0 +1,28 @@
+chân cắm:
+SIM TX → ESP32 RX1 (GPIO4)
+SIM RX → ESP32 TX1 (GPIO2)
+
+
+CODE TEST:
+
+HardwareSerial SIM(1);
+
+void setup() {
+  Serial.begin(115200);
+  SIM.begin(115200, SERIAL_8N1, 4, 2);
+  delay(3000);
+
+  SIM.println("AT");
+}
+
+void loop() {
+  if (SIM.available()) {
+    Serial.write(SIM.read());
+  }
+}
+
+quy trình test:
+AT
+AT+CPIN?
+AT+CSQ
+AT+CREG?

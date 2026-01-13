@@ -1,0 +1,90 @@
+#include "BluetoothSerial.h"
+BluetoothSerial SerialBT;
+
+// ===== Pin config =====
+#define IN1 26
+#define IN2 27
+#define IN3 14
+#define IN4 12
+
+#define ENA 25
+#define ENB 33
+
+// PWM
+#define PWM_FREQ 1000
+#define PWM_RES 8
+#define PWM_CH_A 0
+#define PWM_CH_B 1
+
+int speedMotor = 180;
+
+// ===== Motor functions =====
+void stopCar() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
+
+void forward() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void backward() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void turnLeft() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void turnRight() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
+
+void setup() {
+  Serial.begin(115200);
+  SerialBT.begin("ESP32_CAR"); // tên Bluetooth
+
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  ledcSetup(PWM_CH_A, PWM_FREQ, PWM_RES);
+  ledcSetup(PWM_CH_B, PWM_FREQ, PWM_RES);
+  ledcAttachPin(ENA, PWM_CH_A);
+  ledcAttachPin(ENB, PWM_CH_B);
+
+  ledcWrite(PWM_CH_A, speedMotor);
+  ledcWrite(PWM_CH_B, speedMotor);
+
+  stopCar();
+}
+
+void loop() {
+  if (SerialBT.available()) {
+    char cmd = SerialBT.read();
+    Serial.println(cmd);
+
+    switch (cmd) {
+      case 'F': forward(); break;
+      case 'B': backward(); break;
+      case 'L': turnLeft(); break;
+      case 'R': turnRight(); break;
+      case 'S': stopCar(); break;
+    }
+  }
+}

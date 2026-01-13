@@ -1,0 +1,22 @@
+chân cắm:
+GPS TX → ESP32 RX2 (GPIO16)
+GPS RX → ESP32 TX2 (GPIO17)
+VCC → 5V
+GND → GND
+
+
+code test:
+#include <HardwareSerial.h>
+
+HardwareSerial GPS(2);
+
+void setup() {
+  Serial.begin(115200);
+  GPS.begin(9600, SERIAL_8N1, 16, 17);
+}
+
+void loop() {
+  while (GPS.available()) {
+    Serial.write(GPS.read());
+  }
+}
