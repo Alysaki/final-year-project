@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:text="Tạo Nhiệm Vụ Mới"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView android:text="Điểm lấy hàng" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <EditText
+        android:hint="Kho hàng trung tâm A"
+        android:background="#EEEEEE"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView android:text="Điểm giao hàng" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <EditText
+        android:hint="Nhập địa chỉ giao hàng"
+        android:background="#EEEEEE"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:text="Giao nhanh (15-30 phút)"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:background="#F0F0F0"
+        android:padding="15dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView android:text="TỔNG CHI PHÍ DỰ KIẾN: " android:textStyle="bold" android:textSize="18sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <TextView android:text="Quãng đường:" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <Button
+        android:text="Xác nhận tạo nhiệm vụ"
+        android:backgroundTint="#00C853"
+        android:textColor="#FFF"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/btnConfirmTask"/>
+
+</LinearLayout>
