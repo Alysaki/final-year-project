@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.autodeliveryapp" />
+                  <option name="mobileSdkAppId" value="1:689835179877:android:69eb0175436b921e52ab8c" />
+                  <option name="projectId" value="auto-delivery-e0327" />
+                  <option name="projectNumber" value="689835179877" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

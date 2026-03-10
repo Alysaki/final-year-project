@@ -1,10 +1,9 @@
 package com.example.autodeliveryapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -14,24 +13,34 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Tìm nút Logout theo ID đã đặt trong XML (btnLogout)
-        Button btnLogout = findViewById(R.id.btnLogout);
+        // Load thông tin từ SharedPreferences
+        // TODO Giai đoạn 2: Lấy từ Firebase Auth + Realtime Database
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String name  = prefs.getString("userName", "Người dùng");
+        String email = prefs.getString("userEmail", "—");
+        String phone = prefs.getString("userPhone", "—");
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Hiển thị thông báo
-                Toast.makeText(ProfileActivity.this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
+        ((TextView) findViewById(R.id.tvProfileName)).setText(name);
+        ((TextView) findViewById(R.id.tvProfileEmail)).setText(email);
+        ((TextView) findViewById(R.id.tvProfilePhone)).setText(phone);
 
-                // Logic đăng xuất: Quay về màn hình chính và xóa các màn hình cũ
-                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        // Back → MainActivity
+        findViewById(R.id.btnBack).setOnClickListener(v ->
+                startActivity(new Intent(this, MainActivity.class)));
 
-                // Cờ (Flag) này giúp xóa sạch các Activity đang mở để về lại tinh khôi
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        // Logout
+        findViewById(R.id.btnLogout).setOnClickListener(v -> logout());
+    }
 
-                startActivity(intent);
-                finish(); // Đóng Activity hiện tại
-            }
-        });
+    private void logout() {
+        // TODO Giai đoạn 2: Firebase Auth signOut()
+        SharedPreferences.Editor editor =
+                getSharedPreferences("UserPrefs", MODE_PRIVATE).edit();
+        editor.putBoolean("isLoggedIn", false);
+        editor.apply();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
