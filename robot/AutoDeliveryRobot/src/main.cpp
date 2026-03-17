@@ -1,80 +1,30 @@
 #include <Arduino.h>
 
-#include "motor.h"
-#include "bluetooth.h"
-#include "distance.h"
+#include "bluetooth/bluetooth.h"
+#include "motor/motor.h"
+#include "sensor/vl53.h"
+#include "gps/gps.h"
 
-#define BUZZER 25
-#define OBSTACLE_DISTANCE 300   // 30 cm
-
-void setup()
-{
+void setup() {
     Serial.begin(115200);
 
-    motorInit();
-    bluetoothInit();
-    distanceInit();
+    motor_init();
+    bt_init();
+    vl53_init();
+    gps_init();
 
-    pinMode(BUZZER, OUTPUT);
-
-    Serial.println("Robot Ready");
+    Serial.println("SYSTEM READY");
 }
 
-void loop()
-{
-    // đọc lệnh bluetooth
-    char cmd = readBluetooth();
+void loop() {
+    String cmd = bt_read();
 
-    if (cmd == 'F')
-        forward();
+    if(cmd == "F") move_forward();
+    else if(cmd == "B") move_backward();
+    else if(cmd == "L") turn_left();
+    else if(cmd == "R") turn_right();
+    else if(cmd == "S") stop_motor();
 
-    else if (cmd == 'B')
-        back();
-
-    else if (cmd == 'L')
-        left();
-
-    else if (cmd == 'R')
-        right();
-
-    else if (cmd == 'S')
-        stopMotor();
-
-
-    // đọc khoảng cách từ 4 cảm biến
-    int front = readFront();
-    int leftD = readLeft();
-    int rightD = readRight();
-    int backD = readBack();
-
-
-    // hiển thị debug
-    Serial.print("Front: ");
-    Serial.print(front);
-
-    Serial.print("  Left: ");
-    Serial.print(leftD);
-
-    Serial.print("  Right: ");
-    Serial.print(rightD);
-
-    Serial.print("  Back: ");
-    Serial.println(backD);
-
-
-    // kiểm tra vật cản
-    bool obstacle =
-        (front > 0 && front < OBSTACLE_DISTANCE) ||
-        (leftD > 0 && leftD < OBSTACLE_DISTANCE) ||
-        (rightD > 0 && rightD < OBSTACLE_DISTANCE) ||
-        (backD > 0 && backD < OBSTACLE_DISTANCE);
-
-
-    if (obstacle)
-        digitalWrite(BUZZER, HIGH);
-    else
-        digitalWrite(BUZZER, LOW);
-
-
-    delay(60);
+    vl53_read();
+    gps_read();
 }
