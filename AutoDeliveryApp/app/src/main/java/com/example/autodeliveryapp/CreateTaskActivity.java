@@ -3,150 +3,146 @@ package com.example.autodeliveryapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.*;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.button.MaterialButton;
+
 import com.google.android.material.textfield.TextInputEditText;
-import java.util.UUID;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Random;
 
 public class CreateTaskActivity extends AppCompatActivity {
 
-    private TextInputEditText etSenderName, etSenderPhone, etPickupPoint, etDeliveryPoint;
-    private AutoCompleteTextView spinnerService;
-    private android.widget.TextView tvEstimatedCost, tvDistance;
-    private MaterialButton btnConfirmTask;
+    // Cước phí Phase 1 (đồng)
+    private static final int BASE_STANDARD  = 15_000;
+    private static final int RATE_STANDARD  = 5_000;   // mỗi km
+    private static final int BASE_FAST      = 25_000;
+    private static final int RATE_FAST      = 8_000;   // mỗi km
 
-    // Phương thức thanh toán được chọn
-    private String selectedPayment = "wallet"; // "wallet" hoặc "cash"
+    private TextInputEditText etSenderName, etSenderPhone;
+    private EditText          etPickup, etDropoff;
+    private Spinner           spinnerService;
+    private RadioGroup        rgPayment;
+    private TextView          tvEstimatedPrice, tvDistance;
 
-    // Giá cước theo loại dịch vụ (VNĐ/km)
-    private static final double PRICE_STANDARD = 5000; // 5.000đ/km
-    private static final double PRICE_EXPRESS   = 9000; // 9.000đ/km
-
-    // Khoảng cách mặc định giả lập (Giai đoạn 3 sẽ tính thật)
-    private double estimatedDistanceKm = 2.4;
+    private double simulatedDistance = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
 
-        initViews();
-        prefillUserData();
-        setupServiceDropdown();
-        setupPaymentSelection();
-        calculatePrice();
+        bindViews();
+        prefillUserInfo();
+        setupServiceSpinner();
+        setupAddressWatcher();
 
-        btnConfirmTask.setOnClickListener(v -> confirmTask());
-
-        // Tính lại giá khi đổi loại dịch vụ
-        spinnerService.setOnItemClickListener((parent, view, position, id) -> calculatePrice());
-
-        // Back
-        findViewById(R.id.btnBack).setOnClickListener(v ->
-                startActivity(new Intent(this, MainActivity.class)));
+        // Nút Xác nhận
+        findViewById(R.id.btnConfirm).setOnClickListener(v -> confirmTask());
     }
 
-    private void initViews() {
-        etSenderName   = findViewById(R.id.etSenderName);
-        etSenderPhone  = findViewById(R.id.etSenderPhone);
-//        etPickupPoint  = findViewById(R.id.etPickupPoint);
-//        etDeliveryPoint = findViewById(R.id.etDeliveryPoint);
-        spinnerService  = findViewById(R.id.spinnerService);
-        tvEstimatedCost = findViewById(R.id.tvEstimatedCost);
-        tvDistance      = findViewById(R.id.tvDistance);
-        btnConfirmTask  = findViewById(R.id.btnConfirmTask);
+    private void bindViews() {
+        etSenderName     = findViewById(R.id.etSenderName);
+        etSenderPhone    = findViewById(R.id.etSenderPhone);
+        etPickup         = findViewById(R.id.etPickup);
+        etDropoff        = findViewById(R.id.etDropoff);
+        spinnerService   = findViewById(R.id.spinnerService);
+        rgPayment        = findViewById(R.id.rgPayment);
+        tvEstimatedPrice = findViewById(R.id.tvEstimatedPrice);
+        tvDistance       = findViewById(R.id.tvDistance);
     }
 
-    /** Điền sẵn thông tin từ profile */
-    private void prefillUserData() {
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        etSenderName.setText(prefs.getString("userName", ""));
-        etSenderPhone.setText(prefs.getString("userPhone", ""));
+    private void prefillUserInfo() {
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        etSenderName.setText(prefs.getString("username", ""));
+        etSenderPhone.setText(prefs.getString("phone", ""));
     }
 
-    private void setupServiceDropdown() {
+    private void setupServiceSpinner() {
         String[] services = {
-                "🚀 Giao nhanh (15-30 phút)",
-                "📦 Giao tiêu chuẩn (1-2 giờ)"
+                "📦 Giao hàng tiêu chuẩn (30-60 phút)",
+                "🚀 Giao hàng nhanh (15-30 phút)"
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_dropdown_item_1line, services);
+                this, android.R.layout.simple_spinner_item, services);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerService.setAdapter(adapter);
-        spinnerService.setText(services[0], false);
-    }
 
-    private void setupPaymentSelection() {
-        androidx.cardview.widget.CardView cardWallet = findViewById(R.id.cardWallet);
-        androidx.cardview.widget.CardView cardCash   = findViewById(R.id.cardCash);
-
-        cardWallet.setOnClickListener(v -> {
-            selectedPayment = "wallet";
-            cardWallet.setCardBackgroundColor(getColor(R.color.green_light));
-            cardCash.setCardBackgroundColor(getColor(R.color.background));
-        });
-        cardCash.setOnClickListener(v -> {
-            selectedPayment = "cash";
-            cardCash.setCardBackgroundColor(getColor(R.color.green_light));
-            cardWallet.setCardBackgroundColor(getColor(R.color.background));
+        spinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, android.view.View v,
+                                                 int pos, long id) { updatePrice(); }
+            @Override public void onNothingSelected(AdapterView<?> p) {}
         });
     }
 
-    /** Tính giá ước tính dựa trên loại dịch vụ */
-    private void calculatePrice() {
-        String service = spinnerService.getText().toString();
-        double pricePerKm = service.contains("nhanh") ? PRICE_EXPRESS : PRICE_STANDARD;
-        long totalPrice = Math.round(estimatedDistanceKm * pricePerKm);
+    private void setupAddressWatcher() {
+        TextWatcher watcher = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
+            @Override public void onTextChanged(CharSequence s, int st, int b, int c) {}
+            @Override public void afterTextChanged(Editable s) {
+                String pickup  = etPickup.getText().toString().trim();
+                String dropoff = etDropoff.getText().toString().trim();
+                if (!pickup.isEmpty() && !dropoff.isEmpty()) {
+                    // Phase 1: khoảng cách ngẫu nhiên 0.5 – 8.0 km
+                    // Phase 3: thay bằng khoảng cách thực từ MapLibre/OSM
+                    simulatedDistance = Math.round(
+                            (0.5 + new Random().nextDouble() * 7.5) * 10.0) / 10.0;
+                    updatePrice();
+                } else {
+                    simulatedDistance = 0;
+                    tvDistance.setText("- km");
+                    tvEstimatedPrice.setText("---.---đ");
+                }
+            }
+        };
+        etPickup.addTextChangedListener(watcher);
+        etDropoff.addTextChangedListener(watcher);
+    }
 
-        // Format giá VNĐ
-        String formattedPrice = String.format("%,dđ", totalPrice)
-                .replace(",", ".");
-        tvEstimatedCost.setText(formattedPrice);
-        tvDistance.setText(String.format("%.1f km", estimatedDistanceKm));
+    private void updatePrice() {
+        if (simulatedDistance == 0) return;
+        boolean isFast    = spinnerService.getSelectedItemPosition() == 1;
+        int     base      = isFast ? BASE_FAST    : BASE_STANDARD;
+        int     ratePerKm = isFast ? RATE_FAST    : RATE_STANDARD;
+        int     total     = (int) (base + ratePerKm * simulatedDistance);
+
+        tvDistance.setText(simulatedDistance + " km");
+        tvEstimatedPrice.setText(
+                NumberFormat.getNumberInstance(new Locale("vi", "VN")).format(total) + "đ");
     }
 
     private void confirmTask() {
-        String senderName    = etSenderName.getText().toString().trim();
-        String senderPhone   = etSenderPhone.getText().toString().trim();
-        String pickupPoint   = etPickupPoint.getText().toString().trim();
-        String deliveryPoint = etDeliveryPoint.getText().toString().trim();
+        String senderName  = etSenderName.getText() != null
+                ? etSenderName.getText().toString().trim() : "";
+        String senderPhone = etSenderPhone.getText() != null
+                ? etSenderPhone.getText().toString().trim() : "";
+        String pickup      = etPickup.getText().toString().trim();
+        String dropoff     = etDropoff.getText().toString().trim();
 
-        // Validate
-        if (senderName.isEmpty() || senderPhone.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập thông tin người gửi", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (pickupPoint.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập điểm lấy hàng", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (deliveryPoint.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập điểm giao hàng", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (senderName.isEmpty())  { Toast.makeText(this, "Nhập tên người gửi",   Toast.LENGTH_SHORT).show(); return; }
+        if (senderPhone.isEmpty()) { Toast.makeText(this, "Nhập số điện thoại",   Toast.LENGTH_SHORT).show(); return; }
+        if (pickup.isEmpty())      { Toast.makeText(this, "Nhập điểm lấy hàng",   Toast.LENGTH_SHORT).show(); return; }
+        if (dropoff.isEmpty())     { Toast.makeText(this, "Nhập điểm giao hàng",  Toast.LENGTH_SHORT).show(); return; }
+        if (simulatedDistance == 0){ Toast.makeText(this, "Vui lòng nhập đủ địa chỉ", Toast.LENGTH_SHORT).show(); return; }
 
-        // Tạo mã nhiệm vụ
-        String taskId = "RBT-" + (1000 + (int)(Math.random() * 9000));
-        String serviceType  = spinnerService.getText().toString();
-        String costText     = tvEstimatedCost.getText().toString();
 
-        // TODO Giai đoạn 2: Gửi lên Firebase Realtime Database
-        // Cấu trúc node: /tasks/{taskId}
-        // {
-        //   senderName, senderPhone, pickupPoint, deliveryPoint,
-        //   serviceType, payment, estimatedCost, status: "pending",
-        //   timestamp: ServerValue.TIMESTAMP
-        // }
+        // random orderId
+        String orderId = "RBT-" + (1000 + new Random().nextInt(9000));
 
-        Toast.makeText(this, "Đã tạo nhiệm vụ thành công!", Toast.LENGTH_LONG).show();
+        // Phase 2: Gửi dữ liệu lên Firebase Realtime Database ở đây
 
-        // Chuyển sang TrackingActivity
-//        Intent intent = new Intent(this, TrackingActivity.class);
-//        intent.putExtra("taskId", taskId);
-//        intent.putExtra("deliveryPoint", deliveryPoint);
-//        startActivity(intent);
-//        finish();
+        Toast.makeText(this, "✅ Đã tạo nhiệm vụ thành công!", Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(this, TrackingActivity.class);
+        intent.putExtra("orderId",  orderId);
+        intent.putExtra("pickup",   pickup);
+        intent.putExtra("dropoff",  dropoff);
+        intent.putExtra("distance", simulatedDistance);
+        startActivity(intent);
+        finish();
     }
 }

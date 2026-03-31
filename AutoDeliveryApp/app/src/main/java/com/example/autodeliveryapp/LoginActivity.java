@@ -3,31 +3,25 @@ package com.example.autodeliveryapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.button.MaterialButton;
+
 import com.google.android.material.textfield.TextInputEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;
-    private MaterialButton btnLogin;
-    private TextView tvForgotPassword, tvGoRegister;
-
-    // Tài khoản test tạm thời (Giai đoạn 1 - chưa Firebase)
-    private static final String TEST_EMAIL = "test@test.com";
-    private static final String TEST_PASSWORD = "123456";
-    private static final String TEST_USERNAME = "Minh Nguyễn";
-    private static final String TEST_PHONE = "0901234567";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Nếu đã đăng nhập → vào thẳng MainActivity
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        if (prefs.getBoolean("isLoggedIn", false)) {
+        // Nếu đã đăng nhập → bỏ qua
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        if (prefs.getBoolean("is_logged_in", false)) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
@@ -35,45 +29,40 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        etEmail = findViewById(R.id.etEmail);
+        etEmail    = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
-        tvForgotPassword = findViewById(R.id.tvForgotPassword);
-        tvGoRegister = findViewById(R.id.tvGoRegister);
 
-        btnLogin.setOnClickListener(v -> attemptLogin());
+        findViewById(R.id.btnLogin).setOnClickListener(v -> handleLogin());
 
-        tvForgotPassword.setOnClickListener(v ->
-                startActivity(new Intent(this, ForgotPasswordActivity.class)));
-
-        tvGoRegister.setOnClickListener(v ->
+        ((TextView) findViewById(R.id.tvGoRegister)).setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class)));
+
+        ((TextView) findViewById(R.id.tvForgotPassword)).setOnClickListener(v ->
+                startActivity(new Intent(this, ForgotPasswordActivity.class)));
     }
 
-    private void attemptLogin() {
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+    private void handleLogin() {
+        String email = etEmail.getText() != null
+                ? etEmail.getText().toString().trim() : "";
+        String pass  = etPassword.getText() != null
+                ? etPassword.getText().toString() : "";
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (TextUtils.isEmpty(email)) { etEmail.setError("Vui lòng nhập email"); return; }
+        if (TextUtils.isEmpty(pass))  { etPassword.setError("Vui lòng nhập mật khẩu"); return; }
 
-        // TODO (Giai đoạn 2): Thay bằng Firebase Authentication
-        if (email.equals(TEST_EMAIL) && password.equals(TEST_PASSWORD)) {
-            // Lưu session
-            SharedPreferences.Editor editor =
-                    getSharedPreferences("UserPrefs", MODE_PRIVATE).edit();
-            editor.putBoolean("isLoggedIn", true);
-            editor.putString("userName", TEST_USERNAME);
-            editor.putString("userEmail", email);
-            editor.putString("userPhone", TEST_PHONE);
-            editor.apply();
+        // ── Phase 1: Mock login ──────────────────────────────────────
+        // Phase 2: Thay bằng FirebaseAuth.signInWithEmailAndPassword()
+        String username = email.contains("@") ? email.split("@")[0] : email;
 
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        } else {
-            Toast.makeText(this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
-        }
+        getSharedPreferences("user_prefs", MODE_PRIVATE).edit()
+                .putString("email",       email)
+                .putString("username",    username)
+                .putString("phone",       "")
+                .putBoolean("is_logged_in", true)
+                .apply();
+
+        Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }

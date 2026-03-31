@@ -1,10 +1,16 @@
 package com.example.autodeliveryapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class TrackingActivity extends AppCompatActivity {
 
@@ -13,16 +19,41 @@ public class TrackingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
 
-        // Ví dụ: Bấm vào nút "Delivering" để mô phỏng việc xem chi tiết
-        // Lưu ý: Bạn cần thêm ID cho các Button trong XML nếu muốn bắt sự kiện cụ thể.
-        // Ở đây tôi chỉ để hiển thị giao diện tĩnh.
-    }
+        // Nhận dữ liệu từ CreateTaskActivity
+        Intent intent   = getIntent();
+        String orderId  = intent.getStringExtra("orderId");
+        String pickup   = intent.getStringExtra("pickup");
+        String dropoff  = intent.getStringExtra("dropoff");
+        double distance = intent.getDoubleExtra("distance", 1.2);
 
-    // Nếu bạn muốn xử lý nút Back trên điện thoại để về thẳng Trang chủ
-    // thay vì về trang Tạo Task (nếu chưa finish ở trên)
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        // Code mặc định là quay lại trang trước đó
+        // Hiển thị thông tin lên UI
+        ((TextView) findViewById(R.id.tvMissionId))
+                .setText("Mission #" + orderId);
+        ((TextView) findViewById(R.id.tvOrderId))
+                .setText("Mã đơn hàng: #" + orderId);
+        ((TextView) findViewById(R.id.tvDistanceRemaining))
+                .setText(distance + " km");
+
+        // ETA: ước tính 5 phút/km
+        int etaMinutes = (int) Math.ceil(distance * 5);
+        ((TextView) findViewById(R.id.tvETA)).setText(etaMinutes + " phút");
+
+        // Thời gian nhận đơn
+        String now = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        ((TextView) findViewById(R.id.tvReceivedTime))
+                .setText(now + " • " + pickup);
+        ((TextView) findViewById(R.id.tvDeliveryStatus))
+                .setText("Đang di chuyển đến " + dropoff);
+
+        // BottomSheet: kéo lên/xuống
+        BottomSheetBehavior<android.view.View> bsb =
+                BottomSheetBehavior.from(findViewById(R.id.bottomSheet));
+        bsb.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        // Back → MainActivity
+        findViewById(R.id.btnBack).setOnClickListener(v -> {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        });
     }
 }

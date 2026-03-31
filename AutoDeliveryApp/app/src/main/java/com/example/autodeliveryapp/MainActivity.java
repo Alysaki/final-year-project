@@ -3,51 +3,42 @@ package com.example.autodeliveryapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Calendar;
 
-    private TextView tvUserName;
-    private BottomNavigationView bottomNav;
+public class MainActivity extends BottomNavActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvUserName = findViewById(R.id.tvUserName);
-        bottomNav  = findViewById(R.id.bottomNav);
+        // Lời chào theo giờ
+        ((TextView) findViewById(R.id.tvGreeting)).setText(getGreeting());
 
-        // Lấy tên người dùng từ SharedPreferences
-        // TODO Giai đoạn 2: Lấy từ Firebase Realtime Database
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String userName = prefs.getString("userName", "Người dùng");
-        tvUserName.setText(userName);
+        // Tên người dùng từ SharedPreferences
+        // Phase 2: Thay bằng FirebaseDatabase / FirebaseAuth.getCurrentUser()
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        ((TextView) findViewById(R.id.tvUserName))
+                .setText(prefs.getString("username", "Người dùng"));
 
         // Nút Bắt đầu → CreateTaskActivity
-        findViewById(R.id.btnStart).setOnClickListener(v ->
+        ((Button) findViewById(R.id.btnStart)).setOnClickListener(v ->
                 startActivity(new Intent(this, CreateTaskActivity.class)));
 
-        // Bottom Navigation
-        bottomNav.setSelectedItemId(R.id.nav_home);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_profile) {
-                startActivity(new Intent(this, ProfileActivity.class));
-            } else if (id == R.id.nav_notifications) {
-                // TODO: NotificationActivity
-            } else if (id == R.id.nav_activity) {
-                // TODO: ActivityListActivity
-            }
-            return true;
-        });
+        // Bottom Navigation — tab hiện tại: Trang chủ
+        setupBottomNav(findViewById(R.id.bottomNavigation), R.id.nav_home);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bottomNav.setSelectedItemId(R.id.nav_home);
+    private String getGreeting() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if (hour >= 5  && hour < 12) return "Chào buổi sáng,";
+        if (hour >= 12 && hour < 13) return "Chào buổi trưa,";
+        if (hour >= 13 && hour < 18) return "Chào buổi chiều,";
+        return "Chào buổi tối,";
     }
 }

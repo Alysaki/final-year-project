@@ -3,15 +3,17 @@ package com.example.autodeliveryapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.button.MaterialButton;
+
 import com.google.android.material.textfield.TextInputEditText;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private TextInputEditText etUsername, etEmail, etPassword, etPhone;
-    private MaterialButton btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,42 +24,37 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail    = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etPhone    = findViewById(R.id.etPhone);
-        btnRegister = findViewById(R.id.btnRegister);
 
-        findViewById(R.id.btnBack).setOnClickListener(v ->
-                startActivity(new Intent(this, ProfileActivity.class)));
-
-        btnRegister.setOnClickListener(v -> attemptRegister());
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.btnRegister).setOnClickListener(v -> handleRegister());
+        ((TextView) findViewById(R.id.tvGoLogin)).setOnClickListener(v -> finish());
     }
 
-    private void attemptRegister() {
-        String username = etUsername.getText().toString().trim();
-        String email    = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        String phone    = etPhone.getText().toString().trim();
+    private void handleRegister() {
+        String username = etUsername.getText() != null
+                ? etUsername.getText().toString().trim() : "";
+        String email    = etEmail.getText() != null
+                ? etEmail.getText().toString().trim() : "";
+        String pass     = etPassword.getText() != null
+                ? etPassword.getText().toString() : "";
+        String phone    = etPhone.getText() != null
+                ? etPhone.getText().toString().trim() : "";
 
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (TextUtils.isEmpty(username)) { etUsername.setError("Vui lòng nhập tên"); return; }
+        if (TextUtils.isEmpty(email))    { etEmail.setError("Vui lòng nhập email"); return; }
+        if (pass.length() < 6)          { etPassword.setError("Mật khẩu ít nhất 6 ký tự"); return; }
 
-        if (password.length() < 6) {
-            Toast.makeText(this, "Mật khẩu tối thiểu 6 ký tự", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // TODO (Giai đoạn 2): Thay bằng Firebase Auth createUserWithEmailAndPassword
-        SharedPreferences.Editor editor =
-                getSharedPreferences("UserPrefs", MODE_PRIVATE).edit();
-        editor.putBoolean("isLoggedIn", true);
-        editor.putString("userName", username);
-        editor.putString("userEmail", email);
-        editor.putString("userPhone", phone);
-        editor.apply();
+        // ── Phase 1: Lưu vào SharedPreferences ──────────────────────
+        // Phase 2: Thay bằng FirebaseAuth.createUserWithEmailAndPassword()
+        getSharedPreferences("user_prefs", MODE_PRIVATE).edit()
+                .putString("username",    username)
+                .putString("email",       email)
+                .putString("phone",       phone)
+                .putBoolean("is_logged_in", true)
+                .apply();
 
         Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(new Intent(this, MainActivity.class));
+        finishAffinity();
     }
 }
