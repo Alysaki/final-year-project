@@ -1,0 +1,30 @@
+0 verbose cli E:\Application\nodejs\node.exe E:\Application\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.8.0
+2 info using node@v25.6.0
+3 silly config load:file:E:\Application\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\alysa\.npmrc
+5 silly config load:file:E:\Application\nodejs\node_global\etc\npmrc
+6 verbose title npm install npm@11.14.1
+7 verbose argv "install" "--global" "npm@11.14.1"
+8 verbose logfile logs-max:10 dir:E:\comp1786\AutoDeliveryApp\%AppData%\npm-cache\_logs\2026-05-20T14_18_34_196Z-
+9 verbose logfile E:\comp1786\AutoDeliveryApp\%AppData%\npm-cache\_logs\2026-05-20T14_18_34_196Z-debug-0.log
+10 silly logfile done cleaning log files
+11 http cache https://registry.npmjs.org/npm 18ms (cache hit)
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest npm@11.14.1
+15 silly packumentCache full:https://registry.npmjs.org/npm cache-miss
+16 http cache https://registry.npmjs.org/npm 44ms (cache hit)
+17 silly packumentCache full:https://registry.npmjs.org/npm set size:24605851 disposed:false
+18 silly placeDep ROOT npm@11.14.1 OK for:  want: 11.14.1
+19 silly reify moves {}
+20 http cache npm@https://registry.npmjs.org/npm/-/npm-11.14.1.tgz 0ms (cache hit)
+21 silly tarball no local data for npm@https://registry.npmjs.org/npm/-/npm-11.14.1.tgz. Extracting by manifest.
+22 http fetch GET 200 https://registry.npmjs.org/npm/-/npm-11.14.1.tgz 3054ms (cache miss)
+23 silly ADD node_modules/npm
+24 verbose cwd E:\comp1786\AutoDeliveryApp
+25 verbose os Windows_NT 10.0.26200
+26 verbose node v25.6.0
+27 verbose npm  v11.8.0
+28 verbose exit 0
+29 info ok

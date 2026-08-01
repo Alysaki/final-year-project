@@ -1,49 +1,104 @@
 package com.example.autodeliveryapp;
 
 import android.os.Bundle;
-
+import android.util.Log;
+import android.view.View;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.autodeliveryapp.adapters.NotificationAdapter;
 import com.example.autodeliveryapp.data.NotificationItem;
-import com.example.autodeliveryapp.list_managers.NotificationManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.autodeliveryapp.databinding.ActivityNotificationBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NotificationActivity extends BottomNavActivity {
+    private ActivityNotificationBinding binding;
+    private NotificationAdapter adapter;
+    private DatabaseReference notificationRef;
+    private ValueEventListener notificationListener;
+    private final List<NotificationItem> notificationList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
+        binding = ActivityNotificationBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        EdgeToEdgeHelper.setLightStatusBar(this, true);
+        EdgeToEdgeHelper.applySystemBarsPadding(binding.getRoot());
 
-        RecyclerView rv = findViewById(R.id.rvNotifications);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new NotificationManager(this, getMockNotifications()));
+        binding.rvNotifications.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new NotificationAdapter(this, notificationList);
+        binding.rvNotifications.setAdapter(adapter);
 
-        // Bottom Navigation — tab hiện tại: Thông báo
-        BottomNavigationView nav = findViewById(R.id.bottomNavigation);
-        setupBottomNav(nav, R.id.nav_notification);
+        loadNotificationsFromFirebase();
+        setupBottomNav(binding.bottomNavigation, R.id.nav_notification);
     }
 
-    /**
-     * Phase 1: Dữ liệu mẫu cứng
-     * Phase 2: Đọc từ Firebase Cloud Messaging / Realtime Database
-     */
-    private List<NotificationItem> getMockNotifications() {
-        return Arrays.asList(
-                new NotificationItem("🤖", "Đơn hàng đã được đặt",
-                        "Đơn #RBT-9042 đã xác nhận, robot đang chuẩn bị", "10:15"),
-                new NotificationItem("🚀", "Đơn hàng đang vận chuyển",
-                        "Robot đang trên đường giao đơn #RBT-9042",        "10:30"),
-                new NotificationItem("✅", "Đơn hàng giao thành công",
-                        "Đơn #RBT-9041 đã giao thành công lúc 09:45",     "09:45"),
-                new NotificationItem("❌", "Đơn hàng đã bị hủy",
-                        "Đơn #RBT-9039 đã hủy theo yêu cầu",              "Hôm qua"),
-                new NotificationItem("📦", "Đơn hàng mới",
-                        "Bạn có đơn #RBT-9038 đang chờ xử lý",            "Hôm qua")
-        );
+    private void loadNotificationsFromFirebase() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+        
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.tvEmpty.setVisibility(View.GONE);
+        binding.rvNotifications.setVisibility(View.GONE);
+
+        notificationRef = FirebaseDatabase.getInstance(Constants.DB_URL)
+                .getReference("notifications")
+                .child(userId);
+
+        notificationListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (binding == null) return;
+                binding.progressBar.setVisibility(View.GONE);
+                
+                List<NotificationItem> fetchedList = new ArrayList<>();
+                for (DataSnapshot itemSnap : snapshot.getChildren()) {
+                    NotificationItem item = itemSnap.getValue(NotificationItem.class);
+                    if (item != null) {
+                        fetchedList.add(item);
+                    }
+                }
+                
+                // Assuming newer notifications are added at the end (or we can just reverse)
+                Collections.reverse(fetchedList);
+                adapter.updateData(fetchedList);
+
+                if (fetchedList.isEmpty()) {
+                    binding.tvEmpty.setVisibility(View.VISIBLE);
+                    binding.rvNotifications.setVisibility(View.GONE);
+                } else {
+                    binding.tvEmpty.setVisibility(View.GONE);
+                    binding.rvNotifications.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("NotificationActivity", "Failed to load notifications: " + error.getMessage());
+                if (binding != null) {
+                    binding.progressBar.setVisibility(View.GONE);
+                }
+            }
+        };
+        
+        notificationRef.addValueEventListener(notificationListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (notificationRef != null && notificationListener != null) {
+            notificationRef.removeEventListener(notificationListener);
+        }
+        binding = null; // Release binding to avoid memory leak
     }
 }

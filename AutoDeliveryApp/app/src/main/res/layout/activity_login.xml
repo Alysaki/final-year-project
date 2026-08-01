@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🤖"
+            
             android:textSize="64sp"
             android:layout_marginTop="48dp"/>
 
@@ -32,7 +33,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đăng nhập để tiếp tục"
+            android:text="Log in to continue"
             android:textSize="14sp"
             android:textColor="@color/text_secondary"
             android:layout_marginBottom="36dp"/>
@@ -40,20 +41,25 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="Email or Phone Number"
+            android:textColorHint="@color/text_secondary"
+            app:hintTextColor="@color/primary_green"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"/>
+                android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mật khẩu"
+            android:hint="Password"
+            android:textColorHint="@color/text_secondary"
+            app:hintTextColor="@color/primary_green"
+            app:passwordToggleTint="@color/text_secondary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:endIconMode="password_toggle"
             android:layout_marginBottom="8dp">
@@ -68,18 +74,26 @@
             android:id="@+id/tvForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quên mật khẩu?"
+            android:text="Forgot password?"
             android:textColor="@color/accent_blue"
             android:layout_gravity="end"
             android:padding="4dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="16dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:text="Đăng nhập"
+            android:text="Log in"
             android:textSize="16sp"
+            android:textColor="@color/white"
             android:backgroundTint="@color/primary_green"
             android:layout_marginBottom="24dp"/>
 
@@ -90,13 +104,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chưa có tài khoản? "
+                android:text="Don't have an account? "
                 android:textColor="@color/text_secondary"/>
             <TextView
                 android:id="@+id/tvGoRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đăng ký"
+                android:text="Register"
                 android:textColor="@color/primary_green"
                 android:textStyle="bold"/>
         </LinearLayout>

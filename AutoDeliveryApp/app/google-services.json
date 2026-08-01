@@ -2,7 +2,8 @@
   "project_info": {
     "project_number": "689835179877",
     "project_id": "auto-delivery-e0327",
-    "storage_bucket": "auto-delivery-e0327.firebasestorage.app"
+    "storage_bucket": "auto-delivery-e0327.firebasestorage.app",
+    "firebase_url": "https://auto-delivery-e0327-default-rtdb.asia-southeast1.firebasedatabase.app"
   },
   "client": [
     {
