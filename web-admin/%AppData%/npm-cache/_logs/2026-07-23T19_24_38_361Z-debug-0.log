@@ -1,0 +1,87 @@
+0 verbose cli E:\Application\nodejs\node.exe E:\Application\nodejs\node_global\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.14.1
+2 info using node@v25.6.0
+3 silly config load:file:E:\Application\nodejs\node_global\node_modules\npm\npmrc
+4 silly config load:file:E:\final-year-project\web-admin\.npmrc
+5 silly config load:file:C:\Users\alysa\.npmrc
+6 silly config load:file:E:\Application\nodejs\node_global\etc\npmrc
+7 verbose title npm install npm run dev
+8 verbose argv "install" "npm" "run" "dev"
+9 verbose logfile logs-max:10 dir:E:\final-year-project\web-admin\%AppData%\npm-cache\_logs\2026-07-23T19_24_38_361Z-
+10 verbose logfile E:\final-year-project\web-admin\%AppData%\npm-cache\_logs\2026-07-23T19_24_38_361Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest npm@*
+15 silly packumentCache full:https://registry.npmjs.org/npm cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/npm 1564ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/npm set size:undefined disposed:false
+18 silly fetch manifest run@*
+19 silly packumentCache full:https://registry.npmjs.org/run cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/run 182ms (cache miss)
+21 silly packumentCache full:https://registry.npmjs.org/run set size:undefined disposed:false
+22 silly fetch manifest dev@*
+23 silly packumentCache full:https://registry.npmjs.org/dev cache-miss
+24 http fetch GET 200 https://registry.npmjs.org/dev 207ms (cache miss)
+25 silly packumentCache full:https://registry.npmjs.org/dev set size:undefined disposed:false
+26 silly placeDep ROOT dev@0.1.5 OK for:  want: *
+27 silly placeDep ROOT npm@11.18.0 OK for:  want: *
+28 silly placeDep ROOT run@1.5.0 OK for:  want: *
+29 silly fetch manifest inotify@>= 0.1.6
+30 silly packumentCache full:https://registry.npmjs.org/inotify cache-miss
+31 silly fetch manifest minimatch@*
+32 silly packumentCache full:https://registry.npmjs.org/minimatch cache-miss
+33 http fetch GET 200 https://registry.npmjs.org/inotify 187ms (cache miss)
+34 silly packumentCache full:https://registry.npmjs.org/inotify set size:undefined disposed:false
+35 http fetch GET 200 https://registry.npmjs.org/minimatch 237ms (cache miss)
+36 silly packumentCache full:https://registry.npmjs.org/minimatch set size:undefined disposed:false
+37 silly placeDep ROOT inotify@1.4.6 OK for: dev@0.1.5 want: >= 0.1.6
+38 silly fetch manifest bindings@^1.3.1
+39 silly packumentCache full:https://registry.npmjs.org/bindings cache-miss
+40 silly fetch manifest nan@^2.12.1
+41 silly packumentCache full:https://registry.npmjs.org/nan cache-miss
+42 http fetch GET 200 https://registry.npmjs.org/bindings 42ms (cache miss)
+43 silly packumentCache full:https://registry.npmjs.org/bindings set size:undefined disposed:false
+44 http fetch GET 200 https://registry.npmjs.org/nan 54ms (cache miss)
+45 silly packumentCache full:https://registry.npmjs.org/nan set size:undefined disposed:false
+46 silly placeDep ROOT bindings@1.5.0 OK for: inotify@1.4.6 want: ^1.3.1
+47 silly placeDep ROOT nan@2.28.0 OK for: inotify@1.4.6 want: ^2.12.1
+48 silly fetch manifest file-uri-to-path@1.0.0
+49 silly packumentCache full:https://registry.npmjs.org/file-uri-to-path cache-miss
+50 http fetch GET 200 https://registry.npmjs.org/file-uri-to-path 39ms (cache miss)
+51 silly packumentCache full:https://registry.npmjs.org/file-uri-to-path set size:undefined disposed:false
+52 silly placeDep ROOT file-uri-to-path@1.0.0 OK for: bindings@1.5.0 want: 1.0.0
+53 silly placeDep ROOT minimatch@10.2.5 OK for: run@1.5.0 want: *
+54 silly fetch manifest brace-expansion@^5.0.5
+55 silly packumentCache full:https://registry.npmjs.org/brace-expansion cache-miss
+56 http fetch GET 200 https://registry.npmjs.org/brace-expansion 212ms (cache miss)
+57 silly packumentCache full:https://registry.npmjs.org/brace-expansion set size:undefined disposed:false
+58 silly placeDep ROOT brace-expansion@5.0.8 OK for: minimatch@10.2.5 want: ^5.0.5
+59 silly fetch manifest balanced-match@^4.0.2
+60 silly packumentCache full:https://registry.npmjs.org/balanced-match cache-miss
+61 http fetch GET 200 https://registry.npmjs.org/balanced-match 43ms (cache miss)
+62 silly packumentCache full:https://registry.npmjs.org/balanced-match set size:undefined disposed:false
+63 silly placeDep ROOT balanced-match@4.0.4 OK for: brace-expansion@5.0.8 want: ^4.0.2
+64 verbose stack Error: Unsupported platform
+64 verbose stack     at checkPlatform (E:\Application\nodejs\node_global\node_modules\npm\node_modules\npm-install-checks\lib\index.js:42:25)
+64 verbose stack     at #checkEngineAndPlatform (E:\Application\nodejs\node_global\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:202:9)
+64 verbose stack     at Arborist.buildIdealTree (E:\Application\nodejs\node_global\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:172:41)
+64 verbose stack     at async Promise.all (index 1)
+64 verbose stack     at async Arborist.reify (E:\Application\nodejs\node_global\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:111:5)
+64 verbose stack     at async Install.exec (E:\Application\nodejs\node_global\node_modules\npm\lib\commands\install.js:149:5)
+64 verbose stack     at async Npm.exec (E:\Application\nodejs\node_global\node_modules\npm\lib\npm.js:193:9)
+64 verbose stack     at async module.exports (E:\Application\nodejs\node_global\node_modules\npm\lib\cli\entry.js:67:5)
+65 verbose pkgid inotify@1.4.6
+66 error code EBADPLATFORM
+67 error notsup Unsupported platform for inotify@1.4.6: wanted {"os":"linux"} (current: {"os":"win32"})
+68 error notsup Valid os:  linux
+68 error notsup Actual os: win32
+69 silly unfinished npm timer reify 1784834678589
+70 silly unfinished npm timer reify:loadTrees 1784834678589
+71 verbose cwd E:\final-year-project\web-admin
+72 verbose os Windows_NT 10.0.26200
+73 verbose node v25.6.0
+74 verbose npm  v11.14.1
+75 verbose exit 1
+76 verbose code 1
+77 error A complete log of this run can be found in: E:\final-year-project\web-admin\%AppData%\npm-cache\_logs\2026-07-23T19_24_38_361Z-debug-0.log

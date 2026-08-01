@@ -1,0 +1,56 @@
+0 verbose cli E:\Application\nodejs\node.exe E:\Application\nodejs\node_global\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.14.1
+2 info using node@v25.6.0
+3 silly config load:file:E:\Application\nodejs\node_global\node_modules\npm\npmrc
+4 silly config load:file:E:\final-year-project\web-admin\.npmrc
+5 silly config load:file:C:\Users\alysa\.npmrc
+6 silly config load:file:E:\Application\nodejs\node_global\etc\npmrc
+7 verbose title npm install node server.js
+8 verbose argv "install" "node" "server.js"
+9 verbose logfile logs-max:10 dir:E:\final-year-project\web-admin\%AppData%\npm-cache\_logs\2026-07-23T19_24_20_334Z-
+10 verbose logfile E:\final-year-project\web-admin\%AppData%\npm-cache\_logs\2026-07-23T19_24_20_334Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest node@^26.5.0
+15 silly packumentCache full:https://registry.npmjs.org/node cache-miss
+16 verbose shrinkwrap failed to load node_modules/.package-lock.json missing from lockfile: node_modules/node/node_modules/node-bin-setup
+17 http cache https://registry.npmjs.org/node 12ms (cache hit)
+18 silly packumentCache full:https://registry.npmjs.org/node set size:1316159 disposed:false
+19 silly fetch manifest server.js@^1.0.0
+20 silly packumentCache full:https://registry.npmjs.org/server.js cache-miss
+21 http cache https://registry.npmjs.org/server.js 3ms (cache hit)
+22 silly packumentCache full:https://registry.npmjs.org/server.js set size:1883 disposed:false
+23 silly placeDep ROOT node@26.5.0 REPLACE for:  want: ^26.5.0
+24 silly placeDep ROOT server.js@1.0.0 REPLACE for:  want: ^1.0.0
+25 silly reify mark retired [
+25 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\node-win-x64',
+25 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\node',
+25 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\node.cmd',
+25 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\node.ps1'
+25 silly reify ]
+26 silly reify mark retired [
+26 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\node-bin-setup'
+26 silly reify ]
+27 silly reify moves {
+27 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\node-win-x64': 'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.node-win-x64-4I1XmixZ',
+27 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\node': 'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\.node-SEaMiLV5',
+27 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\node.cmd': 'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\.node.cmd-Neul1s00',
+27 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\node.ps1': 'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.bin\\.node.ps1-Ddu7MhjG',
+27 silly reify   'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\node-bin-setup': 'E:\\final-year-project\\web-admin\\node_modules\\node\\node_modules\\.node-bin-setup-UEm69Bix'
+27 silly reify }
+28 silly audit bulk request {
+28 silly audit   'node-bin-setup': [ '1.1.4' ],
+28 silly audit   node: [ '26.5.0' ],
+28 silly audit   'server.js': [ '1.0.0' ]
+28 silly audit }
+29 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 337ms
+30 silly audit report {}
+31 silly REMOVE node_modules/node/node_modules/node-bin-setup
+32 silly REMOVE node_modules/node/node_modules/node-win-x64
+33 verbose cwd E:\final-year-project\web-admin
+34 verbose os Windows_NT 10.0.26200
+35 verbose node v25.6.0
+36 verbose npm  v11.14.1
+37 verbose exit 0
+38 info ok

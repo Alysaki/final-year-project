@@ -1,0 +1,56 @@
+0 verbose cli E:\Application\nodejs\node.exe E:\Application\nodejs\node_global\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.14.1
+2 info using node@v25.6.0
+3 silly config load:file:E:\Application\nodejs\node_global\node_modules\npm\npmrc
+4 silly config load:file:E:\final-year-project\web-admin\.npmrc
+5 silly config load:file:C:\Users\alysa\.npmrc
+6 silly config load:file:E:\Application\nodejs\node_global\etc\npmrc
+7 verbose title npm install node server.js
+8 verbose argv "install" "node" "server.js"
+9 verbose logfile logs-max:10 dir:E:\final-year-project\web-admin\%AppData%\npm-cache\_logs\2026-07-23T19_23_54_490Z-
+10 verbose logfile E:\final-year-project\web-admin\%AppData%\npm-cache\_logs\2026-07-23T19_23_54_490Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest node@*
+15 silly packumentCache full:https://registry.npmjs.org/node cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/npm 286ms
+17 http fetch GET 200 https://registry.npmjs.org/node 313ms (cache miss)
+18 silly packumentCache full:https://registry.npmjs.org/node set size:undefined disposed:false
+19 silly fetch manifest server.js@*
+20 silly packumentCache full:https://registry.npmjs.org/server.js cache-miss
+21 http fetch GET 200 https://registry.npmjs.org/server.js 202ms (cache miss)
+22 silly packumentCache full:https://registry.npmjs.org/server.js set size:undefined disposed:false
+23 silly placeDep ROOT node@26.5.0 OK for:  want: *
+24 silly placeDep ROOT server.js@1.0.0 OK for:  want: *
+25 silly fetch manifest node-bin-setup@^1.0.0
+26 silly packumentCache full:https://registry.npmjs.org/node-bin-setup cache-miss
+27 http fetch GET 200 https://registry.npmjs.org/node-bin-setup 199ms (cache miss)
+28 silly packumentCache full:https://registry.npmjs.org/node-bin-setup set size:undefined disposed:false
+29 silly placeDep ROOT node-bin-setup@1.1.4 OK for: node@26.5.0 want: ^1.0.0
+30 silly reify moves {}
+31 http cache node-bin-setup@https://registry.npmjs.org/node-bin-setup/-/node-bin-setup-1.1.4.tgz 0ms (cache hit)
+32 http cache node@https://registry.npmjs.org/node/-/node-26.5.0.tgz 0ms (cache hit)
+33 silly tarball no local data for node-bin-setup@https://registry.npmjs.org/node-bin-setup/-/node-bin-setup-1.1.4.tgz. Extracting by manifest.
+34 http cache server.js@https://registry.npmjs.org/server.js/-/server.js-1.0.0.tgz 0ms (cache hit)
+35 silly tarball no local data for node@https://registry.npmjs.org/node/-/node-26.5.0.tgz. Extracting by manifest.
+36 silly tarball no local data for server.js@https://registry.npmjs.org/server.js/-/server.js-1.0.0.tgz. Extracting by manifest.
+37 http fetch GET 200 https://registry.npmjs.org/node/-/node-26.5.0.tgz 77ms (cache miss)
+38 http fetch GET 200 https://registry.npmjs.org/node-bin-setup/-/node-bin-setup-1.1.4.tgz 78ms (cache miss)
+39 http fetch GET 200 https://registry.npmjs.org/server.js/-/server.js-1.0.0.tgz 182ms (cache miss)
+40 info run node@26.5.0 preinstall node_modules/node node installArchSpecificPackage
+41 info run node@26.5.0 preinstall { code: 0, signal: null }
+42 silly ADD node_modules/node-bin-setup
+43 silly ADD node_modules/server.js
+44 silly ADD node_modules/node
+45 verbose cwd E:\final-year-project\web-admin
+46 verbose os Windows_NT 10.0.26200
+47 verbose node v25.6.0
+48 verbose npm  v11.14.1
+49 notice
+49 notice New [33mminor[39m version of npm available! [33m11.14.1[39m -> [34m11.18.0[39m
+49 notice Changelog: [34mhttps://github.com/npm/cli/releases/tag/v11.18.0[39m
+49 notice To update run: [4mnpm install -g npm@11.18.0[24m
+49 notice  { force: true, Symbol(proc-log.meta): true }
+50 verbose exit 0
+51 info ok
