@@ -1,13 +1,12 @@
 # 🤖 AGV Autonomous Delivery Robot — Hệ Thống Robot Giao Hàng Tự Hành Chặng Cuối
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-3.0.0-success?style=for-the-badge&logo=semver&logoColor=white" alt="App Version" />
-  <img src="https://img.shields.io/badge/Architecture-Master--Slave-blue?style=for-the-badge&logo=raspberrypi&logoColor=white" alt="Architecture" />
-  <img src="https://img.shields.io/badge/RTOS-FreeRTOS%20Dual--Core-orange?style=for-the-badge&logo=espressif&logoColor=white" alt="FreeRTOS" />
-  <img src="https://img.shields.io/badge/Cloud-HiveMQ%20TLS%208883-purple?style=for-the-badge&logo=mqtt&logoColor=white" alt="MQTT Broker" />
-  <img src="https://img.shields.io/badge/Database-Firebase%20RTDB-F5820D?style=for-the-badge&logo=firebase&logoColor=white" alt="Firebase" />
-  <img src="https://img.shields.io/badge/Web%20Admin-React%2019%20%7C%20Leaflet-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="Web Admin" />
-  <img src="https://img.shields.io/badge/Mobile-Android%20Native%20Java-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Mobile App" />
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/C++-FreeRTOS-00599C?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++ FreeRTOS" />
+  <img src="https://img.shields.io/badge/Java-18-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/MQTT-TLS%208883-660066?style=for-the-badge&logo=mqtt&logoColor=white" alt="MQTT TLS" />
+  <img src="https://img.shields.io/badge/BLE-GATT%20128--bit-0082FC?style=for-the-badge&logo=bluetooth&logoColor=white" alt="BLE GATT" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
 </p>
 
@@ -36,18 +35,18 @@
 - **Phanh laser phản xạ cực nhanh ($<5\text{ms}$):** Cảm biến quang học Time-of-Flight VL53L0X quét khoảng cách chướng ngại vật chu kỳ $30\text{ms}$. Khi vật cản $< 300\text{mm}$, firmware ngắt trực tiếp xung PWM động cơ trên Core 1 của ESP32 mà không phụ thuộc vào hệ điều hành Linux của Raspberry Pi.
 - **Cơ chế Hysteresis Latch chống mù khoảng cách:** Tự động bảo lưu cờ phanh khẩn cấp khi vật cản áp sát dưới ngưỡng tiêu cự ($<20\text{mm}$) và chỉ khôi phục hành trình khi khoảng cách an toàn đạt $>500\text{mm}$ liên tục.
 
-### 4. 🛰️ Giám Sát Hạm Đội & Phòng Thí Nghiệm Ảo (Web Admin & Test Lab)
+### 4. 🛰️ Giám Sát Hạm Đội & Điều Phối Hàng Đợi (Web Fleet Management & FIFO Dispatcher)
 - **Bản đồ giám sát trực quan (React 19 + Leaflet):** Marker AGV xoay góc Heading động theo thời gian thực nhờ GPU CSS Transform, triệt tiêu hiện tượng xoay ngược $350^\circ$ khi đi qua trục Bắc ($0^\circ$).
 - **Bộ điều phối hàng đợi tự động (FIFO Queue Manager):** Quét đơn hàng `pending` mỗi $3\text{s}$, tích hợp Debounce Lock $10\text{s}$ chống bắn lặp lệnh và tự động đóng băng hàng đợi khi robot `OFFLINE`.
-- **Hardware Test Lab:** Cho phép kỹ sư ghi đè tọa độ GPS giả lập (kiểm thử bám đường trong nhà), ép chuyển trạng thái máy FSM, kích hoạt còi/khóa cốp và đọc Live Debug Logs trực tiếp từ xa.
+- **Hardware Test Lab:** Cho phép kỹ sư ghi đè tọa độ GPS giả lập (kiểm thử bám đường trong nhà), ép chuyển trạng thái máy FSM, kích hoạt còi/khóa cốp và stream Live Debug Logs trực tiếp từ xa.
 
 ### 5. 📱 Trải Nghiệm Ứng Dụng Di Động Toàn Diện (Android Native App)
-- **Định tuyến giao thông thực tế:** Tích hợp MapLibre GL và máy chủ OSRM dẫn đường theo mạng lưới đường bộ Đà Nẵng, phân tách rõ ràng chặng lấy hàng (C→A) và chặng giao hàng (A→B).
+- **Định tuyến giao thông thực tế:** Tích hợp MapLibre GL và máy chủ OSRM dẫn đường theo mạng lưới đường bộ thực tế, phân tách rõ ràng chặng lấy hàng (C→A) và chặng giao hàng (A→B).
 - **Đồng bộ thời gian thực bền vững (Firebase-first):** Tự động khôi phục tuyến đường khi mở lại app, tra cứu tài khoản số điện thoại siêu tốc $O(1)$ qua node `/phoneIndex`, và giao dịch nguyên tử (Atomic Transaction) chống tranh chấp đặt trùng khay hàng.
 
 ---
 
-## 🏛️ Kiến Trúc Hệ Thống (System Architecture)
+## 🏛️ Bức Tranh Tổng Thể Kiến Trúc (System Architecture)
 
 ```
 +───────────────────────────────────────────────────────────────────────────────────────────────────+
@@ -68,8 +67,8 @@
 │  |  - Đồng bộ đơn hàng: /tasks & /recipientTasks |     |  - Cổng MQTTS bảo mật: TLS 8883       |  │
 │  |  - Quản lý khay hàng: /robotSlots             |     |  - Topics: agv/location (1Hz, QoS 0)  |  │
 │  |  - Tra cứu số điện thoại O(1): /phoneIndex    |     |           agv/orders/pending (QoS 1)  |  │
-│  |  - Thông báo đẩy: Firebase Cloud Messaging    |     |           agv/orders/status (QoS 1)   |  │
-│  |  - Cấu hình trạm sạc: /system/agv_home        |     |           agv/commands (QoS 1)        |  │
+│  |  - Cấu hình trạm sạc: /system/agv_home        |     |           agv/orders/status (QoS 1)   |  │
+│  |                                               |     |           agv/commands (QoS 1)        |  │
 │  +───────────────────────▲───────────────────────+     +───────────────────▲───────────────────+  │
 +──────────────────────────┼─────────────────────────────────────────────────┼──────────────────────+
                            │ Firebase Admin SDK                              │ MQTT Client (TLS)
@@ -116,6 +115,7 @@
 ## 📡 Bảng Hợp Đồng Giao Tiếp Cốt Lõi (Core Contracts)
 
 ### 1. MQTT Topic Registry (HiveMQ Broker - TLS 8883)
+
 | Topic | Hướng truyền | QoS | Tần suất | Chức năng |
 | :--- | :---: | :---: | :---: | :--- |
 | `agv/location` | Pi 4 $\rightarrow$ Cloud | 0 | 1 Hz | Đẩy Telemetry tọa độ GPS, góc Heading, vận tốc thực và pin |
@@ -143,17 +143,59 @@
 
 ---
 
-## 📊 Ma Trận Đo Lường Thực Tế (Production Benchmarks)
+## ⚡ Hiệu Năng & Chỉ Số Đo Lường Thực Tế (Production Benchmarks)
 
-| Chỉ số kỹ thuật | Kết quả kiểm chứng thực tế | Đánh giá & Tiêu chuẩn |
+*Các chỉ số đo lường thực tế trên hệ thống phần cứng và môi trường mạng thực nghiệm:*
+
+| Hạng mục kỹ thuật | Kết quả đo được | Đánh giá & Tiêu chuẩn |
 | :--- | :---: | :--- |
-| **Tần số vòng lặp PID Động cơ (ESP32)** | **20 Hz (50ms)** | Cân bằng tuyệt đối giữa 2 bánh xe qua L298N |
-| **Thời gian phản xạ phanh khẩn cấp Laser ToF** | **< 5 ms** | Ngắt cứng trên Core 1, dừng trước vật cản $30\text{cm}$ |
-| **Độ trễ truyền nhận UART kèm CRC-8** | **< 2 ms** | Tỷ lệ rớt gói < 0.01% nhờ mạch dập xung tụ gốm 104 |
-| **Tần số cập nhật vị trí EKF (Dead Reckoning)** | **20 Hz** | Duy trì mượt mà cả khi mất tín hiệu vệ tinh |
-| **Bán kính cập bến chính xác (Docking Accuracy)** | **≤ 1.5 m** | Tiếp cận tinh bằng la bàn + Odometry |
-| **Thời gian nạp dữ liệu Firebase RTDB** | **< 120 ms** | Đồng bộ đám mây tức thời trên mạng 4G |
-| **Thời gian mở cốp qua sóng BLE (Handshake)** | **< 0.8 s** | Quét và kết nối trực tiếp không qua trung gian |
+| **Tần số vòng lặp PID Động cơ (ESP32)** | **20 Hz (50ms)** | Cân bằng vận tốc 2 bánh qua mạch cầu H L298N |
+| **Thời gian phản xạ phanh khẩn cấp Laser ToF** | **< 5 ms** | Ngắt cứng trên Core 1, tự dừng trước vật cản $30\text{cm}$ |
+| **Độ trễ truyền nhận UART kèm CRC-8** | **< 2 ms** | Tỷ lệ rớt gói $< 0.01\%$ nhờ mạch dập xung tụ gốm 104 |
+| **Tần số cập nhật vị trí EKF (Dead Reckoning)** | **20 Hz** | Duy trì mượt mà cả khi tín hiệu GPS bị che khuất |
+| **Bán kính cập bến chính xác (Docking Accuracy)** | **≤ 1.5 m** | Tiếp cận tinh bằng la bàn + Odometry bánh xe |
+| **Thời gian nạp dữ liệu Firebase RTDB** | **< 120 ms** | Đồng bộ đám mây tức thời trên mạng di động 4G |
+| **Thời gian xác thực mở cốp qua sóng BLE** | **< 0.8 s** | Quét và kết nối trực tiếp cục bộ không phụ thuộc Internet |
+
+---
+
+## 📁 Cấu Trúc Cây Thư Mục (Project Directory Tree)
+
+```
+final-year-project/
+├── AutoDeliveryApp/               # PHÂN HỆ MOBILE ANDROID NATIVE
+│   ├── app/src/main/              # Mã nguồn Java, Layout XML, Gradle Kotlin DSL
+│   └── docs app/                  # Tài liệu kiến trúc, BLE contract, lỗi đã gặp của App
+│
+├── web-admin/                     # PHÂN HỆ QUẢN TRỊ & ĐIỀU PHỐI ĐÁM MÂY
+│   ├── backend/                   # Node.js, Express, Socket.io, MQTT Client, Firebase Admin
+│   ├── frontend/                  # React 19, TypeScript, Vite, TailwindCSS v4, Leaflet Map
+│   └── web docs/                  # Tài liệu triển khai, nhật ký tiến hóa, lỗi đã gặp của Web
+│
+├── robot/                         # PHÂN HỆ ĐIỀU KHIỂN ROBOT TỰ HÀNH
+│   ├── pi_master/                 # Raspberry Pi 4 (Python 3): FSM, EKF, Pure Pursuit, MQTT
+│   ├── arduino_slave/             # ESP32 (C++/FreeRTOS): Motor PID, BLE, ToF, Servo, Encoder
+│   └── robot docs/                # Sơ đồ phần cứng, hướng dẫn nối dây, lỗi đã gặp của Robot
+│
+├── docs tổng/                     # TÀI LIỆU HẠT NHÂN & QUY TẮC TOÀN HỆ THỐNG
+│   ├── rule.md                    # Quy tắc vận hành, thứ tự nạp ngữ cảnh, bảo mật Git
+│   ├── phương án triển khai.md    # Rich Picture, bản thiết kế kỹ thuật, hợp đồng dữ liệu
+│   ├── phương án update.md        # Cân nhắc kỹ thuật, các giải pháp đã chọn vs đã loại bỏ
+│   ├── các lỗi đã gặp và cách xử lý.md # Sổ tay 30 sự cố thực tế & giải pháp kiểm chứng
+│   └── ProjectLog.md              # Tiến trình lịch sử commit và ma trận hiện trạng dự án
+│
+└── README.md                      # Trang giới thiệu và hướng dẫn tổng quan của dự án
+```
+
+---
+
+## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
+
+* **Robot Master (Pi 4):** Python 3.11, Extended Kalman Filter (EKF), Pure Pursuit Controller, Paho MQTTv5, PySerial, OSRM Routing Client.
+* **Robot Slave (ESP32):** C/C++, FreeRTOS Dual-Core, PlatformIO, PID Controller, BLE GATT Server, Wire (I2C), ESP32 Encoder Interrupts.
+* **Web Admin Backend:** Node.js (v20+), Express.js, Socket.IO, MQTT.js, Firebase Admin SDK (FCM & Realtime DB).
+* **Web Admin Frontend:** React 19, TypeScript, Vite 6, Tailwind CSS v4, Leaflet Map, Lucide React Icons.
+* **Mobile Client:** Android Native Java (Java 18), Gradle Kotlin DSL, MapLibre GL Android SDK 11.0, Firebase Authentication & Realtime Database, BLE GATT Client.
 
 ---
 
@@ -186,24 +228,14 @@ bash run_robot.sh
 ```
 
 ### 3. Phân hệ Mobile Android App
-- Mở thư mục `AutoDeliveryApp/` bằng **Android Studio Ladybug (hoặc mới hơn)**.
+- Mở thư mục `AutoDeliveryApp/` bằng **Android Studio**.
 - Tạo file `local.properties` tại thư mục gốc của app và điền:
   ```properties
   Firebase_API_Key=YOUR_FIREBASE_WEB_API_KEY
-  MAPTILER_API_KEY=YOUR_MAPTILER_API_KEY
+  MAPTILER_API_KEY=YOUR_MAPTILER_KEY
   DB_URL=https://YOUR_PROJECT_ID.asia-southeast1.firebasedatabase.app
   ```
 - Build và chạy ứng dụng trên thiết bị Android thật (hỗ trợ Bluetooth LE).
-
----
-
-## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
-
-* **Robot Master (Pi 4):** Python 3.11, Extended Kalman Filter (EKF), Pure Pursuit Controller, Paho MQTTv5, PySerial, OSRM Routing Client.
-* **Robot Slave (ESP32):** C/C++, FreeRTOS Dual-Core, PlatformIO, PID Controller, BLE GATT Server, Wire (I2C), ESP32 Encoder Interrupts.
-* **Web Admin Backend:** Node.js (v20+), Express.js, Socket.IO, MQTT.js, Firebase Admin SDK (FCM & Realtime DB).
-* **Web Admin Frontend:** React 19, TypeScript, Vite 6, Tailwind CSS v4, Leaflet Map, Lucide React Icons.
-* **Mobile Client:** Android Native Java (Java 18), Gradle Kotlin DSL, MapLibre GL Android SDK 11.0, Firebase Authentication & Realtime Database, BLE GATT Client.
 
 ---
 
